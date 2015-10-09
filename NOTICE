@@ -1,0 +1,8 @@
+jsonPrototypeJS
+
+Functions to preserve Javascript prototypes during the JSON serialization and deserialization.
+
+Copyright 2015 Peter Ahr
+
+This product bases on the ideas implemented by resurrectJS
+(https://github.com/skeeto/resurrect-js).

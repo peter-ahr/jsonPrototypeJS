@@ -1,0 +1,14 @@
+{
+    "predef": [ "define", "module" ]
+  , "curly": true
+  , "forin": true
+  , "freeze": true
+  , "latedef": true
+  , "laxbreak": true
+  , "laxcomma": true
+  , "maxcomplexity": 33
+  , "singleGroups": false
+  , "strict": true
+  , "undef": true
+  , "unused": true
+}

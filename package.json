@@ -1,0 +1,31 @@
+{
+  "name": "jsonPrototypeJS",
+  "description": "Use JSON from Javascript while retaining selected prototypes of your objects",
+  "version": "1.0.0",
+  "homepage": "http://github.com/peter-ahr/jsonPrototypeJS"
+  "author": {
+    "name": "Peter Ahr",
+    "url": "http://github.com/peter-ahr"
+  },
+  "licenses": [
+    {
+      "type": "Apache 2.0",
+      "url": "http://github.com/peter-ahr/jsonPrototypeJS/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peter-ahr/jsonPrototypeJS"
+  },
+  "engines": {
+    "node": ">=0.4.0"
+  },
+  "bugs": {
+    "url": "https://github.com/peter-ahr/jsonPrototypeJS/issues"
+  },
+  "maintainers": [
+    {
+      "name": "Peter Ahr"
+    }
+  ]
+}
