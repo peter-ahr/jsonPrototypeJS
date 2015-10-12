@@ -55,7 +55,7 @@ var FlagJSM = global.toString() == "[object BackstagePass]";
 // }
 
 //==============================================================================
-// Object.assign polyfill
+// Polyfills
 
 if (typeof Object.assign !== 'function') {
     Object.assign = function (dest /*, src, ... */) {
@@ -80,15 +80,53 @@ if (typeof Object.assign !== 'function') {
     };
 }
 
-//==============================================================================
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function pack_regexp_flags_() {
+var RegExp_flags;
+
+if (typeof /x/.flags === 'string') {
+    RegExp_flags = function() { return this.flags; }
+}
+else {
+    RegExp_flags = function() {
     return (this.global     ? "g" : "")
          + (this.ignoreCase ? "i" : "")
          + (this.unicode    ? "u" : "")
          + (this.multiline  ? "m" : "")
          + (this.sticky     ? "y" : "");
+    }
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+var RegExp_pack, RegExp_toJSON;
+
+if ( function(re_) {
+         re_.X = ''; return "{}" === JSON.stringify( { r: re_ } );
+     } (/somere/g) )
+{
+    RegExp_toJSON = function() {
+        return {
+              '#': 'RegExp'
+            , r: this.source
+            , f: RegExp_flags.call(this)
+        };
+    };
+    
+    RegExp_pack = function() {
+        this.toJSON = RegExp_toJSON;
+    };    
+}
+else {
+    RegExp_pack = function() {
+        this['#'] = 'RegExp';
+        this.r = this.source;
+        this.f = RegExp_flags.call(this);
+        this.toJSON = undefined;
+    };
+}
+
+//==============================================================================
 
 function pack_object_(protoName_, v) {
     switch (protoName_) {
@@ -98,7 +136,7 @@ function pack_object_(protoName_, v) {
 
     case "RegExp":
         // console.log("PACK_OBJECT RegExp " + n);
-        return { r: v.source, f: pack_regexp_flags_.call(v), "#": protoName_};
+        return { r: v.source, f: RegExp_flags.call(v), "#": protoName_};
 
     case undefined:
     case null:
@@ -182,12 +220,12 @@ function packObject_mod_(protoName_, v) {
         v['#'] = protoName_;
         v.d = v.valueOf();
         v.toJSON = undefined;
+        break;
 
     case "RegExp":
         // console.log("PACK_OBJECT RegExp");
-        v['#'] = protoName_;
-        v.r = v.source;
-        v.f = pack_regexp_flags_.call(v);
+        RegExp_pack.call(v);
+        break;
 
     case undefined:
     case null:
@@ -198,6 +236,7 @@ function packObject_mod_(protoName_, v) {
         // console.log("PACK_OBJECT " + protoName_);
         // Shallow copy plus '#' property.
         v['#'] = protoName_;
+        break;
     }
 }
 
