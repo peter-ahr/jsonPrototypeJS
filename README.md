@@ -1,7 +1,7 @@
 # jsonPrototypeJS
-Use JSON from Javascript while retaining selected prototypes of your objects.
+Use JSON.stringify(), .parse() and retain selected JS prototypes of your objects.
 
-This is achieved by either providing special replacer/reviver functions to JSON.stringify() and JSON.parse() or by packing the object _before_ the JSON serialization and unpacking the result _after_ deserialization.
+This is achieved by either providing special replacer/reviver functions to JSON.stringify() and JSON.parse() or by packing the object _before_ the JSON serialization and unpacking the result _after_ deserialization. 
 
 While inspired by [resurrectJS](https://github.com/skeeto/resurrect-js), this approach is fully compatible with JSON.serialize() and JSON.parse() and thus does not impose a proprietary JSON (de)serializer. It however uses some of resurrectJS' ideas.
 
@@ -40,14 +40,14 @@ Simply add a property named **\_\_PROTO\_\_** to the prototype of every object y
 
     MyClass.prototype.__PROTO__ = 'MyClass';
     
-Your objects may contain arbitrary objects or arrays with or without the \_\_PROTO\_\_ property. jsonPrototypeJS will not look into objects which have a prototype other than Object.prototype. We might otherwise recurse into the DOM or into other 3rd party structures. Recursion happens only as long plain objects, plain arrays or objects with prototype.\_\_PROTO\_\_ are involved.
+Your objects may contain arbitrary objects or arrays with or without the \_\_PROTO\_\_ property. jsonPrototypeJS will not look into objects which have a prototype other than Object.prototype. We might otherwise recurse into the DOM or into other 3rd party structures. Recursion happens only for plain objects, plain arrays or objects with prototype.\_\_PROTO\_\_.
 
-If you'll (de)serialize Date and RegExp objects, you'll have to add the **\_\_PROTO\_\_** property to their prototype, too.
+If you'll (de)serialize Date and RegExp objects, you'll also have to add the **\_\_PROTO\_\_** property to their prototype(s).
 
     Date.prototype.__PROTO__ = 'Date';
     RegExp.prototype.__PROTO__ = 'RegExp';
     
-Finally, you'll have to provide the constructors in a hash object indexed by name  on the deserialization side and pass this to the unpack function:
+Finally, you'll have to provide the constructors in a hash object indexed by name  on the deserialization side and pass this to the unpack function(s):
 
     constructorsHash = { MyObject: MyObject, MySubClass: MySubClass };  
     
@@ -67,16 +67,30 @@ Finally, you'll have to provide the constructors in a hash object indexed by nam
 
 ## How it works
 
-Each object with a prototype to retain receives a '#' property containing the constructor name (as in resurrectJS). During deserialization, the received plain object will be replaced by an object with prototype which will be created using Object.create(constructorsHash[value_of_#_property]). This empty object with the now correct prototype is than populated with the properties from the received object. This is done using Object.assign().
+Each object with a prototype to retain receives a '#' property containing the constructor name (as in resurrectJS). During deserialization, the received plain object will be replaced by an object with the appropriate prototype which will be created using Object.create(constructorsHash[value_of_#_property]). This empty object with the now correct prototype is than populated with the properties from the received object. This is done using Object.assign().
 
 *Note:  On browsers which do not have Object.assign() (i.e. IE), a polyfill is provided.*
 
-The original values of special number values, Date objects and RegExp objects are transferred and recreated using special objects carrying their properties.
+The original values of special number values, Date objects and RegExp objects (which are normally ignored by JSON.stringify()/.parse()) are transferred and recreated using special objects carrying their properties.
 
-*Note: On Rhino there is an issue with the recreation of RegExp objects.*
+## Platforms
+
+* Major current Browsers
+* node.js V0.4ff
+* Rhino (tested with 1.7.6)
+* IE 10ff
+* IE9 may work, but I have none at hand
+* IE8 does __not__ work (misses Object.create() and related static functions)
+
+*Note: The code withstands the 'advanced' compression of the Google Closure compiler.*
+
+## Sources
+
+* GitHub (https://github.com/peter-ahr/jsonPrototypeJS)
+* NPM: 'npm install json_prototype' (https://www.npmjs.com/package/json_prototype)
+* bower: 'bower install json_prototype'
 
 ## Examples
 
  * [selftest sample](test/sample.html) / [JS Code](test/sample.js)
  * [anarchic sample](test/test2.html) / [JS Code](test/test2.js)
- 
