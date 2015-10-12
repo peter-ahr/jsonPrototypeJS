@@ -1,0 +1,22 @@
+{
+  "name": "json_prototype",
+  "version": "1.0.1",
+  "homepage": "https://github.com/peter-ahr/jsonPrototypeJS",
+  "authors": [
+    "Peter Ahr"
+  ],
+  "description": "Use JSON.stringify(), .parse() and retain selected JS prototypes",
+  "main": "jsonPrototype.js",
+  "keywords": [
+    "json",
+    "prototype"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
