@@ -1,6 +1,6 @@
 jsonPrototypeJS
 
-Functions to preserve Javascript prototypes during the JSON serialization and deserialization.
+Functions to preserve Javascript prototypes during JSON serialization and deserialization.
 
 Copyright 2015 Peter Ahr
 
