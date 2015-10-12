@@ -64,7 +64,7 @@ if (typeof jsonPrototype !== 'object') {
 }
 
 //==============================================================================
-// Output to console or screen.
+// Output to console and/or browser.
 
 var log, show_ = function() { }
 
@@ -99,7 +99,7 @@ if (typeof console === 'object') {
         return false;
     }
 }
-else {
+else {  // Rhino
     log = function(msg, good) {
         msg += (typeof good === 'boolean'
                     ? ": " + (good ? "OK" : "FAIL") : "");
@@ -168,7 +168,7 @@ function check(sent, flagDate_, received, flagOuter_) {
 }
 
 //==============================================================================
-// Usage
+// Samples and Tests
 
 var constructorsHash = { Base: Base, Derived: Derived, Transfer: Transfer };
 
@@ -235,7 +235,7 @@ good = good && r;
 var received = JSON.parse(
     jsonIndirect, jsonPrototype.unpack.bind(constructorsHash));
 
-r = check(sent,     true /*indirect serialization handles Date*/,
+r = check(sent,     true  /*indirect serialization handles Date*/,
           received, false /*direct deserialization cannot handle outer*/);
 good = good && r;
 
